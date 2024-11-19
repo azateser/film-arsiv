@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar'
 import ScreenNavigation from '@/screens/index'
 import '@/global.css'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Text } from 'react-native'
 
 SplashScreen.preventAutoHideAsync()
 
