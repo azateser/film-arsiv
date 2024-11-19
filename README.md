@@ -64,39 +64,39 @@ film-arsiv
 ![Settings2](https://i.hizliresim.com/6em05wi.jpeg)
 
 # To Do
-- [] Auth Screen
+- [ ] Auth Screen
     - [x] Login
     - [x] Register
-    - [] Forgot Password
+    - [ ] Forgot Password
     - [x] Select Profile
     - [x] Subscription
     - [x] Welcome
-- [] Home Screen
+- [ ] Home Screen
     - [x] Slider
-    - [] Categories
-    - [] Movies
-    - [] Series
-- [] Categories Screen
-    - [] [CategoryName]
-    - [] New
-    - [] Popular
-    - [] Recommended
-- [] Movies Screen
-    - [] [MovieName]
-    - [] [MovieName] Details
-- [] Series Screen
-    - [] [SeriesName]
-    - [] [SeriesName] Details
-- [] Search Screen
-- [] Profile Screen
-    - [] Profile
-    - [] Settings
-    - [] Subscription
-    - [] Watched
-    - [] Favorite
-- [] Video Screen
-    - [] Video Player
-    - [] Video Details
+    - [ ] Categories
+    - [ ] Movies
+    - [ ] Series
+- [ ] Categories Screen
+    - [ ] [CategoryName]
+    - [ ] New
+    - [ ] Popular
+    - [ ] Recommended
+- [ ] Movies Screen
+    - [ ] [MovieName]
+    - [ ] [MovieName] Details
+- [ ] Series Screen
+    - [ ] [SeriesName]
+    - [ ] [SeriesName] Details
+- [ ] Search Screen
+- [ ] Profile Screen
+    - [ ] Profile
+    - [ ] Settings
+    - [ ] Subscription
+    - [ ] Watched
+    - [ ] Favorite
+- [ ] Video Screen
+    - [ ] Video Player
+    - [ ] Video Details
 
 # License
 [MIT](https://choosealicense.com/licenses/mit/)
