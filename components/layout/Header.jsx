@@ -1,3 +1,5 @@
+import React, { useRef, useEffect } from 'react'
+import { Text, TouchableOpacity, View, Animated } from 'react-native'
 import LogoSVG from '@/assets/global/Logo'
 import {
   BookmarkLayoutIcon,
@@ -5,8 +7,6 @@ import {
   ProfileLayoutIcon,
   SearchLayoutIcon,
 } from '@/assets/icons/Layout'
-import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
 
 const HeaderMenuItems = [
   {
@@ -20,7 +20,17 @@ const HeaderMenuItems = [
   },
 ]
 
-const Header = ({ bottomMenu = true }) => {
+const Header = ({ bottomMenu = true, isScrolling }) => {
+  const animationValue = useRef(new Animated.Value(1)).current
+
+  useEffect(() => {
+    Animated.timing(animationValue, {
+      toValue: bottomMenu && !isScrolling ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start()
+  }, [isScrolling, bottomMenu])
+
   return (
     <View className='px-5'>
       <View className='flex py-4 flex-row justify-between items-center'>
@@ -43,27 +53,38 @@ const Header = ({ bottomMenu = true }) => {
         </View>
       </View>
       {bottomMenu && (
-        <View className='flex flex-row justify-between'>
-          {HeaderMenuItems.map((item, index) => (
-            <TouchableOpacity key={index}>
-              <Text className='text-white text-lg font-inter700'>
-                {item.title}
+        <Animated.View
+          style={{
+            height: animationValue.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 30],
+            }),
+            overflow: 'hidden',
+            opacity: animationValue,
+          }}
+        >
+          <View className='flex flex-row justify-between'>
+            {HeaderMenuItems.map((item, index) => (
+              <TouchableOpacity key={index}>
+                <Text className='text-white text-lg font-inter700'>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity>
+              <Text className='font-inter700 text-lg flex flex-row'>
+                {'AVANTAJLAR'.split('').map((char, index) => (
+                  <Text
+                    key={index}
+                    className={index % 2 === 0 ? 'text-white' : 'text-primary'}
+                  >
+                    {char}
+                  </Text>
+                ))}
               </Text>
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity>
-            <Text className='font-inter700 text-lg flex flex-row'>
-              {'AVANTAJLAR'.split('').map((char, index) => (
-                <Text
-                  key={index}
-                  className={index % 2 === 0 ? 'text-white' : 'text-primary'}
-                >
-                  {char}
-                </Text>
-              ))}
-            </Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </Animated.View>
       )}
     </View>
   )
