@@ -10,6 +10,7 @@ import RegisterScreen from '@/screens/Auth/Register/index'
 import SubscriptionScreen from '@/screens/Auth/Subscription/index'
 import SelectProfileScreen from '@/screens/Auth/SelectProfile/index'
 import DetailScreen from './Detail'
+import PlayerScreen from './Player'
 
 const Stack = createNativeStackNavigator()
 
@@ -17,7 +18,7 @@ export default ScreenNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName='Home'
+        initialRouteName='Player'
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen
@@ -47,6 +48,14 @@ export default ScreenNavigation = () => {
         />
         <Stack.Screen name='Home' component={HomeScreen} />
         <Stack.Screen name='Detail' component={DetailScreen} />
+        <Stack.Screen
+          name='Player'
+          component={PlayerScreen}
+          options={{
+            headerShown: false,
+            orientation: 'landscape',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )

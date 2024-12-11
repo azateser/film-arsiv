@@ -9,6 +9,7 @@ type ButtonProps = {
   startIcon?: React.ReactNode
   centerRightIcon?: React.ReactNode
   centerLeftIcon?: React.ReactNode
+  onlyIcon?: React.ReactNode
   className?: string
   textStyles?: string
 }
@@ -19,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   startIcon,
   centerRightIcon,
   centerLeftIcon,
+  onlyIcon,
   className,
   textStyles,
   ...props
@@ -50,11 +52,14 @@ const Button: React.FC<ButtonProps> = ({
     >
       {startIcon && <View className='mr-2 absolute left-5'>{startIcon}</View>}
       {centerLeftIcon && <View className='mr-2'>{centerLeftIcon}</View>}
-      <Text
-        className={`font-bold font-inter700 text-base ${getButtonTextStyle()} ${textStyles}`}
-      >
-        {title}
-      </Text>
+      {onlyIcon && <View>{onlyIcon}</View>}
+      {!onlyIcon && (
+        <Text
+          className={`font-bold font-inter700 text-base ${getButtonTextStyle()} ${textStyles}`}
+        >
+          {title}
+        </Text>
+      )}
       {centerRightIcon && <View className='ml-2'>{centerRightIcon}</View>}
     </TouchableOpacity>
   )
