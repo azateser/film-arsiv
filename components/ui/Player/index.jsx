@@ -1,21 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { TouchableOpacity, Animated, View } from 'react-native'
+import {
+  TouchableOpacity,
+  Animated,
+  View,
+  Dimensions,
+  Text,
+} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import PlayerBottom from '@/components/ui/Player/PlayerBottom'
 import PlayerBar from '@/components/ui/Player/PlayerBar'
 import PlayerTop from '@/components/ui/Player/Top'
 import PlayerController from '@/components/ui/Player/PlayerController'
-import { ResizeMode, Video, AVPlaybackStatus } from 'expo-av'
+import { ResizeMode, Video } from 'expo-av'
+import { EpisodesData } from '@/mocks/Episodes'
+import { State, TapGestureHandler } from 'react-native-gesture-handler'
+import DoubleTab from './DoubleTab'
 
-const VideoPlayer = ({ source }) => {
+const VideoPlayer = ({ source, navigation, showEpisodes, setShowEpisodes }) => {
+  const { duration } = source
+
+  // Video Refs
   const video = useRef(null)
+  const doubleTapRef = useRef(null)
+  const controlsOpacity = useRef(new Animated.Value(1)).current
+  const seekAnimationValue = useRef(new Animated.Value(0)).current
 
-  const [isPlaying, setIsPlaying] = useState(false)
+  // Video Player States
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [videoSpeed, setVideoSpeed] = useState(1)
   const [currentTime, setCurrentTime] = useState(0)
   const [showControls, setShowControls] = useState(true)
-  const controlsOpacity = useRef(new Animated.Value(1)).current
-  const [totalDuration, setTotalDuration] = useState(0)
+  const [totalDuration, setTotalDuration] = useState(duration)
+
+  // Seek States
   const seekingRef = useRef(false)
+  const [seekAnimation, setSeekAnimation] = useState(false)
+  const [seekDirection, setSeekDirection] = useState()
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying)
@@ -80,6 +100,10 @@ const VideoPlayer = ({ source }) => {
     }
   }, [showControls, seekingRef.current])
 
+  useEffect(() => {
+    setShowControls(false)
+  }, [showEpisodes])
+
   const handlePlaybackStatusUpdate = status => {
     if (!seekingRef.current) {
       setCurrentTime(status.positionMillis / 1000)
@@ -91,25 +115,89 @@ const VideoPlayer = ({ source }) => {
     }
   }
 
+  // !TODO: Implement video quality selection based on internet speed
+  // Determines video quality based on internet speed:
+  // 0.5 Mbps - 2 Mbps -> 240p
+  // 2 Mbps - 5 Mbps -> 480p (SD)
+  // 5 Mbps - 10 Mbps -> 720p (HD)
+  // 10 Mbps - 25 Mbps -> 1080p (Full HD)
+  // 25 Mbps and above -> 4K (Ultra HD)
+
+  const triggerSeekAnimation = direction => {
+    setShowControls(false)
+    seekAnimationValue.setValue(0)
+    setSeekAnimation(true)
+
+    Animated.timing(seekAnimationValue, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start(() => {
+      setSeekAnimation(false)
+    })
+  }
+  const onSingleTapEvent = event => {
+    if (event.nativeEvent.state === State.ACTIVE && !showEpisodes) {
+      showControls ? hideControlsWithFade() : showControlsWithFade()
+    }
+  }
+
+  const handleDoubleTap = direction => {
+    if (direction === 'right') {
+      setShowControls(false)
+      setSeekDirection('right')
+      handleGoForward10Seconds()
+      triggerSeekAnimation('right')
+    } else if (direction === 'left') {
+      setShowControls(false)
+      setSeekDirection('left')
+      handleGoBack10Seconds()
+      triggerSeekAnimation('left')
+    }
+  }
+
+  const onDoubleTapEvent = event => {
+    if (event.nativeEvent.state === State.ACTIVE && !showEpisodes) {
+      const direction =
+        event.nativeEvent.x < Dimensions.get('window').width / 2
+          ? 'left'
+          : 'right'
+      handleDoubleTap(direction)
+    }
+  }
+
   return (
     <View className='bg-background flex-1 relative'>
-      <TouchableOpacity
-        onPress={showControlsWithFade}
-        activeOpacity={1}
-        className='w-full h-screen flex-1 z-10'
+      <DoubleTab
+        seekAnimation={seekAnimation}
+        seekAnimationValue={seekAnimationValue}
+        seekDirection={seekDirection}
+      />
+      <TapGestureHandler
+        onHandlerStateChange={onSingleTapEvent}
+        waitFor={doubleTapRef}
       >
-        <Video
-          ref={video}
-          source={require('@/assets/video/video1.mp4')}
-          useNativeControls={false}
-          isMuted={false}
-          resizeMode={ResizeMode.COVER}
-          shouldPlay={isPlaying}
-          isLooping
-          onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </TouchableOpacity>
+        <TapGestureHandler
+          ref={doubleTapRef}
+          onHandlerStateChange={onDoubleTapEvent}
+          numberOfTaps={2}
+        >
+          <View className='w-full h-screen flex-1 z-10'>
+            <Video
+              ref={video}
+              source={source.sources[0].uri}
+              useNativeControls={false}
+              isMuted={false}
+              resizeMode={ResizeMode.COVER}
+              shouldPlay={isPlaying}
+              isLooping
+              onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
+              style={{ width: '100%', height: '100%' }}
+              rate={videoSpeed}
+            />
+          </View>
+        </TapGestureHandler>
+      </TapGestureHandler>
       {showControls && (
         <Animated.View
           style={{
@@ -143,7 +231,7 @@ const VideoPlayer = ({ source }) => {
                 }}
               />
             </TouchableOpacity>
-            <PlayerTop />
+            <PlayerTop data={source} navigation={navigation} />
             <PlayerController
               isPlaying={isPlaying}
               togglePlayPause={togglePlayPause}
@@ -156,7 +244,12 @@ const VideoPlayer = ({ source }) => {
                 totalDuration={totalDuration}
                 onSeek={handleSeek}
               />
-              <PlayerBottom />
+              <PlayerBottom
+                videoSpeed={videoSpeed}
+                setVideoSpeed={setVideoSpeed}
+                setShowControls={setShowControls}
+                toggleEpisodes={setShowEpisodes}
+              />
             </View>
           </View>
         </Animated.View>

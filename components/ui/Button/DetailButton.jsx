@@ -2,9 +2,12 @@ import { PlayDetailIcon, FloorDetailIcon } from '@/assets/icons/Detail'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
-const DetailButton = () => {
+const DetailButton = ({ navigation }) => {
   return (
-    <TouchableOpacity className='bg-primary rounded-2xl w-60 overflow-hidden'>
+    <TouchableOpacity
+      className='bg-primary rounded-2xl w-60 overflow-hidden'
+      onPress={() => navigation.navigate('Player')}
+    >
       <View className='px-8 pt-4 pb-5 flex flex-row gap-3 items-center justify-center'>
         <PlayDetailIcon />
         <Text className='text-xl font-inter700'>

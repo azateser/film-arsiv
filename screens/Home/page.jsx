@@ -1,6 +1,5 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, Text, View } from 'react-native'
-import Button from '@/components/ui/Button'
+import { SafeAreaView, ScrollView, View } from 'react-native'
 import Header from '@/components/layout/Header'
 import MainSlider from './components/MainSlider'
 import SliderDetail from './components/SliderDetail'

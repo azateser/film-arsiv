@@ -8,6 +8,7 @@
       "@/screens/*": ["screens/*"],
       "@/hooks/*": ["hooks/*"],
       "@/mocks/*": ["mocks/*"],
+      "@/utils/*": ["utils/*"],
 
       // Assets
       "@/assets/*": ["assets/*"],

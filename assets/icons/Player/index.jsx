@@ -10,6 +10,9 @@ import EpisodesIcon from './Episodes'
 import SubtitleIcon from './Subtitle'
 import DownloadIcon from './Download'
 import NextEpisodeIcon from './NextEpisode'
+import Background10SecBackDoubleTab from './10SecBackDoubleTab'
+import Background10SecForwardDoubleTab from './10SecForwardDoubleTab'
+import CloseIcon from './Close'
 
 export const BackPlayerIcon = props => <BackIcon {...props} />
 export const GoBack10SecPlayerIcon = props => <GoBack10SecIcon {...props} />
@@ -23,3 +26,13 @@ export const EpisodesPlayerIcon = props => <EpisodesIcon {...props} />
 export const SubtitlePlayerIcon = props => <SubtitleIcon {...props} />
 export const DownloadPlayerIcon = props => <DownloadIcon {...props} />
 export const NextEpisodePlayerIcon = props => <NextEpisodeIcon {...props} />
+
+export const Background10SecBackDoubleTabPlayerIcon = props => (
+  <Background10SecBackDoubleTab {...props} />
+)
+
+export const Background10SecForwardDoubleTabPlayerIcon = props => (
+  <Background10SecForwardDoubleTab {...props} />
+)
+
+export const ClosePlayerIcon = props => <CloseIcon {...props} />

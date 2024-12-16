@@ -59,7 +59,7 @@ const DetailScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <Content />
-        <DetailPlay />
+        <DetailPlay navigation={navigation} />
         <DetailActions />
         <Tab tabs={tabs} />
       </SafeAreaView>
